@@ -8,7 +8,7 @@ function addInterestToDom(){
     API.getData("interests", "?_expand=place")
     .then(data=>{
         data.forEach(interest => {
-            interestContainer.appendChild(interestComponent(interest.name, interest.description, interest.cost, interest.place.name, interest.review))
+            interestContainer.appendChild(interestComponent(interest.name, interest.description, interest.cost, interest.place.name, interest.review, interest.id))
         });
     })
 }

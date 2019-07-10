@@ -22,15 +22,15 @@
       "placeId": 1,
       "name": "Local Market",
       "description": "Local market where you can purchase local products and try the local food",
-      "cost": 0,
+      "cost": "324",
       "review": ""
     },
     {
       "placeId": "1",
       "name": "asg",
       "description": "arg",
-      "cost": "asgrw",
-      "review": "arwgea",
+      "cost": {},
+      "review": {},
       "id": 2
     },
     {
@@ -48,6 +48,22 @@
       "cost": "kljnwaea",
       "review": "lkwjer",
       "id": 4
+    },
+    {
+      "placeId": "1",
+      "name": "aef",
+      "description": "aef",
+      "cost": "awe",
+      "review": "",
+      "id": 5
+    },
+    {
+      "placeId": "1",
+      "name": "sssss",
+      "description": "sdf",
+      "cost": "sdf",
+      "review": "",
+      "id": 6
     }
   ]
 }
