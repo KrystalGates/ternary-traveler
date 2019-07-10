@@ -1,6 +1,7 @@
 import { API } from "./api";
 import {interestComponent, headerComponent} from "./components.js"
 
+// adds interests to DOM
 function addInterestToDom(){
     let interestContainer =document.querySelector("#interestContainer")
     interestContainer.innerHTML = ""
