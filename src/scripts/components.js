@@ -1,7 +1,7 @@
-import { API } from "./api";
-import { buildInterestObj } from "./helpers";
-import { addInterestToDom } from "./addToDOM";
+import { buildInterestObj, formValidation } from "./helpers";
+import { submitNewInterestListener, addFormBtnListener, editCostReviewListener, deleteBtnListener } from "./events";
 
+// component that creates header and Add interest button
 function headerComponent() {
   let headerDiv = document.createElement("div");
   headerDiv.setAttribute("id", "headerDiv");
@@ -12,22 +12,15 @@ function headerComponent() {
   addInterestBtn.setAttribute("id", "addInterestBtn");
   addInterestBtn.textContent = "Add Interest";
   addInterestBtn.addEventListener("click", event => {
-    addInterestBtn.style.display = "none";
-    headerDiv.appendChild(addInterestComponent())
-    if(addInterestBtn.style.display = "none"){
-        document.querySelector("#hideFormBtn").addEventListener("click", event => {
-            event.preventDefault()
-            document.querySelector("#interestForm").style.display = "none"
-            addInterestBtn.style.display = "block"
-        })
-    }
+    addFormBtnListener(addInterestBtn, headerDiv)
   });
   headerDiv.appendChild(interestHeader);
   headerDiv.appendChild(addInterestBtn);
   return headerDiv;
 }
 
-function interestComponent(name, description, cost, place, review) {
+// component that formats each interest
+function interestComponent(name, description, cost, place, review, id) {
   let interestDiv = document.createElement("div");
   interestDiv.setAttribute("id", "interestDiv");
   let nameInterest = document.createElement("h2");
@@ -45,14 +38,34 @@ function interestComponent(name, description, cost, place, review) {
   let reviewInterest = document.createElement("p")
   reviewInterest.setAttribute("id", "reviewInterest")
   reviewInterest.textContent = `Review: ${review}`
+  let editCostReviewBtn = document.createElement("button")
+  editCostReviewBtn.setAttribute("id", `editCostReviewBtn--${id}`)
+  editCostReviewBtn.textContent = "Edit"
+  editCostReviewBtn.addEventListener("click", event => {
+    costInterest.style.display = "none"
+    editCostReviewBtn.style.display = "none"
+    reviewInterest.style.display = "none"
+      editCostReviewListener(interestDiv)
+  })
+  let deleteBtn = document.createElement("button")
+  deleteBtn.setAttribute("id", `deleteBtn--${id}`)
+  deleteBtn.textContent = "Delete"
+  deleteBtn.addEventListener("click", event =>{
+   deleteBtnListener()
+})
   interestDiv.appendChild(nameInterest);
   interestDiv.appendChild(placeInterest);
   interestDiv.appendChild(descriptionInterest);
   interestDiv.appendChild(costInterest);
-  interestDiv.appendChild(reviewInterest)
+  if(review !== ""){
+      interestDiv.appendChild(reviewInterest)
+  }
+  interestDiv.appendChild(editCostReviewBtn)
+  interestDiv.appendChild(deleteBtn)
   return interestDiv;
 }
 
+// form to add interest
 function addInterestComponent() {
   let interestForm = document.createElement("form");
   interestForm.setAttribute("id", "interestForm")
@@ -78,19 +91,15 @@ function addInterestComponent() {
   dropDownPlace.appendChild(dropDownValue1);
   dropDownPlace.appendChild(dropDownValue2);
   dropDownPlace.appendChild(dropDownValue3);
-  let reviewInput = document.createElement("textarea")
-  reviewInput.setAttribute("id", "reviewInput")
-  reviewInput.setAttribute("placeholder", "Review Here!")
   let submitBtn = document.createElement("button")
   submitBtn.setAttribute("id", "submitBtn")
   submitBtn.textContent = "Save New Interest"
   submitBtn.addEventListener("click", event =>{
     event.preventDefault()
-    API.addData("interests", buildInterestObj(dropDownPlace.value, nameInterestInput.value, descriptionInput.value, costInput.value, reviewInput.value) )
-    .then (data =>{
-        addInterestToDom()
-        interestForm.reset()
-    })
+    if ( formValidation(nameInterestInput, descriptionInput, costInput) ===true) {
+      let newInterestObj = buildInterestObj(dropDownPlace.value, nameInterestInput.value, descriptionInput.value, costInput.value, "")
+     submitNewInterestListener(newInterestObj, interestForm)
+    }
   })
   let hideFormBtn = document.createElement("button")
   hideFormBtn.setAttribute("id", "hideFormBtn")
@@ -100,11 +109,29 @@ function addInterestComponent() {
   interestForm.appendChild(descriptionInput)
   interestForm.appendChild(costInput)
   interestForm.appendChild(dropDownPlace);
-  interestForm.appendChild(reviewInput)
   interestForm.appendChild(submitBtn)
   interestForm.appendChild(hideFormBtn)
 
   return interestForm
 }
 
-export { interestComponent, headerComponent };
+// form to edit cost and review on interest card
+function editFormComponent(editButtonId){
+    let editForm = document.createElement("form")
+    editForm.setAttribute("id", `editForm--${editButtonId}`)
+    let editCostLabel = document.createElement("label")
+    editCostLabel.textContent = "Cost:"
+    let editCostInterest = document.createElement("input")
+    editCostInterest.setAttribute("id", `editCostInterest--${editButtonId}`)
+    let editReviewLabel = document.createElement("label")
+    editReviewLabel.textContent = "Review:"
+    let editReviewInterest = document.createElement("input")
+    editReviewInterest.setAttribute("placeholder", "Add Review")
+    editReviewInterest.setAttribute("id", `editReviewInterest--${editButtonId}`)
+    editForm.appendChild(editCostLabel)
+    editForm.appendChild(editCostInterest)
+    editForm.appendChild(editReviewLabel)
+    editForm.appendChild(editReviewInterest)
+    return editForm
+}
+export { interestComponent, headerComponent, addInterestComponent, editFormComponent};
